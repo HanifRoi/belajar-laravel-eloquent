@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Scopes\isActiveScope;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\ProductSeeder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
@@ -216,5 +219,17 @@ class CategoryTest extends TestCase
 
         $category = Category::withoutGlobalScopes([isActiveScope::class])->find("FOOD");
         self::assertNotNull($category);//tanpa global scope
+
+    }
+
+    public function testOneToMany()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $category = Category::find('FOOD');
+        self::assertNotNull($category);
+
+        $product = $category->products;
+        self::assertNotNull(1, $product->count());
+        
     }
 }
