@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Scopes\isActiveScope;
 use Database\Seeders\CategorySeeder;
+use Database\Seeders\CustomerSeeder;
 use Database\Seeders\ProductSeeder;
+use Database\Seeders\ReviewSeeder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -258,9 +261,22 @@ class CategoryTest extends TestCase
 
         $category = Category::find('FOOD');
         $product = $category->products;
-        self::assertCount(1, $product);
+        self::assertCount(2, $product);
         $outOfStockProduct = $category->products()->where('stock', '<=', '0')->get();
-        self::assertCount(1, $outOfStockProduct);
+        self::assertCount(2, $outOfStockProduct);
+
+    }
+
+    public function testHasManyThrough()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class, CustomerSeeder::class, ReviewSeeder::class]);
+
+        $category = Category::find('FOOD');
+        self::assertNotNull($category);
+
+        $review=$category->reviews;
+        self::assertNotNull($review);
+        self::assertCount(2, $review);
 
     }
 }
