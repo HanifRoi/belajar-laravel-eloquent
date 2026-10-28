@@ -232,4 +232,35 @@ class CategoryTest extends TestCase
         self::assertNotNull(1, $product->count());
         
     }
+
+    public function testOneToManyQuery()
+    {
+        $category = new Category();
+
+        $category->id="FOOD";
+        $category->name="Food";
+        $category->description="Food Category";
+        $category->is_active=true;
+        $category->save();
+
+        $product = new Product();
+        $product->id='1';
+        $product->name='Product 1';
+        $product->description='Description 1';
+        $category->products()->save($product);
+
+        self::assertNotNull($product->id);
+    }
+
+    public function testRelationshipQuery()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find('FOOD');
+        $product = $category->products;
+        self::assertCount(1, $product);
+        $outOfStockProduct = $category->products()->where('stock', '<=', '0')->get();
+        self::assertCount(1, $outOfStockProduct);
+
+    }
 }
