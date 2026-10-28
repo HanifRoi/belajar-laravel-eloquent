@@ -21,4 +21,6 @@ class CategorySeeder extends Seeder
         $category->is_active=true;
         $category->save();
     }
+
+    
 }
