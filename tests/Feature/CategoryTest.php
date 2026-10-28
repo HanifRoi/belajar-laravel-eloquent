@@ -157,4 +157,47 @@ class CategoryTest extends TestCase
 
 
     }
+
+    public function testCreate()
+    {
+        $request = [
+            'id'=>"FOOD",
+            'name'=>"Food",
+            'description'=>"Description Food"
+        ];
+
+        $category = new Category($request);
+        $category->save();
+        self::assertNotNull($category->id);
+
+    }
+
+    public function testCreateUsingQueryBuilder()
+    {
+        $request = [
+            'id'=>"FOOD",
+            'name'=>"Food",
+            'description'=>"Description Food"
+        ];
+
+        $category = Category::create($request);
+        $category->save();
+        self::assertNotNull($category->id);
+
+    }
+
+    public function testUpdateMassal()
+    {
+        $this->seed(CategorySeeder::class);
+
+        $request = [
+            'name'=>"Food",
+            'description'=>"Description Food Updated"
+        ];
+
+        $category = Category::find("FOOD");
+        $category->fill($request);
+        $category->save();
+        self::assertNotNull($category->id);
+    }
 }

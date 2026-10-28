@@ -12,4 +12,10 @@ class Category extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'description'
+    ]; // membuat agar bisa di ubah atau di isi langsung, selain ini gak bisa di ubah atau di tambah secara langsung secara massal
 }
