@@ -79,4 +79,34 @@ class CustomerTest extends TestCase
         $product = $customer->likeProducts;
         self::assertCount(0, $product);
     }
+
+    public function testPivotAttribute()
+    {
+        $this->testManyToManyAttach();
+        $customer = Customer::find('HANIF');
+        $product = $customer->likeProducts;
+
+        foreach($product as $prd){
+            $pivot = $prd->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+        }
+    }
+
+    public function testPivotAttributeCondition()
+    {
+        $this->testManyToManyAttach();
+        $customer = Customer::find('HANIF');
+        $product = $customer->likeProductsLastWeek;
+
+        foreach($product as $prd){
+            $pivot = $prd->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+        }
+    }
 }
