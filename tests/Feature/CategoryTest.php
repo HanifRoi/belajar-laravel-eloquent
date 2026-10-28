@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Scopes\isActiveScope;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -199,5 +200,21 @@ class CategoryTest extends TestCase
         $category->fill($request);
         $category->save();
         self::assertNotNull($category->id);
+    }
+
+    public function testGlobalScope()
+    {
+        $category = new Category();
+        $category->id = "FOOD";
+        $category->name = "Food";
+        $category->description="Food Category";
+        $category->is_active=false;
+        $category->save();
+
+        $category = Category::find("FOOD");
+        self::assertNull($category);
+
+        $category = Category::withoutGlobalScopes([isActiveScope::class])->find("FOOD");
+        self::assertNotNull($category);//tanpa global scope
     }
 }
