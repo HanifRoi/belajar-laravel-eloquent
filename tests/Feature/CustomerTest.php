@@ -14,6 +14,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertNotNull;
+
 class CustomerTest extends TestCase
 {
     public function testOneToOne()
@@ -139,5 +141,25 @@ class CustomerTest extends TestCase
         self::assertNotNull($image);
 
         self::assertEquals('https:://www.programmerzamannow.com/image/1.jpg', $image->url);
+    }
+
+    public function testEager()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, ImageSeeder::class]);
+        
+        $customer = Customer::with(['wallet', 'image'])->find('HANIF');//eager
+        assertNotNull($customer);
+        // $customer->wallet;
+        // $customer->image; Lazy
+    }
+
+    public function testEagerWithModel()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, ImageSeeder::class]);
+        
+        $customer = Customer::find('HANIF');//sudah di hardcode di model Customer untuk eagernya
+        assertNotNull($customer);
+        // $customer->wallet;
+        // $customer->image; Lazy
     }
 }
