@@ -72,7 +72,7 @@ class ProductTest extends TestCase
 
         $comments = $product->comments;
         foreach ($comments as $com) {
-            self::assertEquals(Product::class, $com->commentable_type);
+            self::assertEquals('product', $com->commentable_type);
             self::assertEquals($product->id, $com->commentable_id);
         }
 
