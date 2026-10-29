@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
 use App\Models\Person;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -59,4 +60,27 @@ class PersonTest extends TestCase
         assertInstanceOf(Carbon::class, $person->created_at);
         assertInstanceOf(Carbon::class, $person->created_at);
     }
+
+    public function testCustomCasts()
+    {
+        $person =  new Person();
+        $person->first_name='Hanif';
+        $person->last_name='Roihan';
+        $person->address = new Address("Jalan Belum Jadi", "Jakarta", "Indonesia", "12345");
+        $person->save();
+
+        assertNotNull($person);
+        assertNotNull($person->created_at);
+        assertNotNull($person->updated_at);
+        assertInstanceOf(Carbon::class, $person->created_at);
+        assertInstanceOf(Carbon::class, $person->updated_at);
+
+        assertInstanceOf(Address::class, $person->address);
+        assertEquals('Jalan Belum Jadi', $person->address->street);
+        assertEquals('Jakarta', $person->address->city);
+        assertEquals('Indonesia', $person->address->country);
+        assertEquals('12345', $person->address->postal_code);
+    }
+
+
 }
