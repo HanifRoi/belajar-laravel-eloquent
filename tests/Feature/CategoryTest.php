@@ -16,6 +16,9 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertEquals;
+
 class CategoryTest extends TestCase
 {
     public function testInsert()
@@ -278,5 +281,15 @@ class CategoryTest extends TestCase
         self::assertNotNull($review);
         self::assertCount(2, $review);
 
+    }
+
+    public function testQueryRelations()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find('FOOD');
+        $product = $category->products()->where('price','=','200')->get();
+        assertCount(1, $product);
+        assertEquals("2", $product[0]->id);
     }
 }
