@@ -9,10 +9,14 @@ use Database\Seeders\CommentSeeder;
 use Database\Seeders\CustomerSeeder;
 use Database\Seeders\ImageSeeder;
 use Database\Seeders\ProductSeeder;
+use Database\Seeders\TagSeeder;
 use Database\Seeders\VoucherSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertNotNull;
 
 class ProductTest extends TestCase
 {
@@ -84,5 +88,26 @@ class ProductTest extends TestCase
 
         $comment = $product->oldestComment;
         self::assertNotNull($comment);
+    }
+
+    public function testManyToManyPolymorphic()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class, VoucherSeeder::class, TagSeeder::class]);
+
+        $product = Product::find('1');
+        self::assertNotNull($product);
+
+        $tags = $product->tags;
+        self::assertNotNull($tags);
+        self::assertCount(1, $tags);
+
+        foreach ($tags as $tag) {
+            self::assertNotNull($tag->id);
+            self::assertNotNull($tag->name);
+
+            $vouchers = $tag->vouchers;
+            self::assertCount(1, $vouchers);
+            self::assertNotNull($vouchers);
+        }
     }
 }
