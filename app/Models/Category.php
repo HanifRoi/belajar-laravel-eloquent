@@ -24,6 +24,10 @@ class Category extends Model
         'description'
     ]; // membuat agar bisa di ubah atau di isi langsung, selain ini gak bisa di ubah atau di tambah secara langsung secara massal
 
+    protected $casts = [
+        'created_at'=>'datetime:U'
+    ];
+
     #[Override]
     protected static function booted():void
     {

@@ -18,6 +18,10 @@ class Product extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $hidden = [
+        'category_id'//supaya tidak terlihat saat proses serialization
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
