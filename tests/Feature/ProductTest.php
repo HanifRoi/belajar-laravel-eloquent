@@ -16,6 +16,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 
 class ProductTest extends TestCase
@@ -109,5 +110,17 @@ class ProductTest extends TestCase
             self::assertCount(1, $vouchers);
             self::assertNotNull($vouchers);
         }
+    }
+
+    public function testEloquentCollection()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $products = Product::query()->get();//hasilnya adalah 2 products, 1,2 idnya
+        $query = $products->toQuery()->where('price', '200')->get();//where id IN(1,2)
+
+        assertNotNull($products);
+        assertEquals('2', $query[0]->id);
+
     }
 }
